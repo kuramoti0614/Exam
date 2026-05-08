@@ -2,28 +2,50 @@ package scoremanager.main;
 
 import java.util.List;
 
-import DAO.SubjectDao;
+import DAO.TestListSubjectDao;
 import bean.School;
 import bean.Subject;
+import bean.TestListSubject;
+import jakarta.servlet.RequestDispatcher;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import tool.Action;
 
-public class TestListSubjectExecuteAction {
+public class TestListSubjectExecuteAction extends Action {
 
-    public void execute(HttpServletRequest req, HttpServletResponse res) throws Exception {
+    @Override
+    public void execute(
+            HttpServletRequest req,
+            HttpServletResponse res)
+            throws Exception {
 
-        // セッションから学校情報を取得
-        School school = (School) req.getSession().getAttribute("school");
+        int entYear =
+            Integer.parseInt(req.getParameter("ent_year"));
+        String classNum =
+            req.getParameter("class_num");
+        String subjectCd =
+            req.getParameter("subject_cd");
+        String schoolCd =
+            req.getParameter("school_cd");
 
-        // DAO 呼び出し
-        SubjectDao dao = new SubjectDao();
-        List<Subject> list = dao.filter(school);
+        Subject subject = new Subject();
+        subject.setCd(subjectCd);
 
-        // JSP に渡す
-        req.setAttribute("subject_list", list);
+        School school = new School();
+        school.setCd(schoolCd);
 
-        // 表示画面へ
-        req.getRequestDispatcher("/subject_list.jsp")
-           .forward(req, res);
+        TestListSubjectDao dao =
+            new TestListSubjectDao();
+
+        List<TestListSubject> list =
+            dao.filter(entYear, classNum, subject, school);
+
+        req.setAttribute("list", list);
+
+        RequestDispatcher rd =
+            req.getRequestDispatcher(
+                "/WEB-INF/jsp/test_list_subject.jsp");
+
+        rd.forward(req, res);
     }
 }

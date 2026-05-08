@@ -51,4 +51,9 @@ public class TestListSubject {
     public void setPoints(Map<Integer, Integer> points) {
         this.points = points;
     }
+
+	public void putPoint(int int1, int int2) {
+		// TODO 自動生成されたメソッド・スタブ
+		
+	}
 }
