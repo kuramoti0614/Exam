@@ -1,3 +1,5 @@
+<<<<<<< HEAD
+=======
 package bean;
 
 public class Subject {
@@ -32,3 +34,4 @@ public class Subject {
         this.school = school;
     }
 }
+>>>>>>> branch 'master' of https://github.com/kuramoti0614/Exam.git
