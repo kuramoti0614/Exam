@@ -1,189 +1,144 @@
-<%@ page contentType="text/html; charset=UTF-8" %>
-<%@ taglib prefix="c" uri="jakarta.tags.core" %>
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+	pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="jakarta.tags.core"%>
+<c:import url="/common/base.jsp">
+	<c:param name="title">
+		得点管理システム
+	</c:param>
 
-<!DOCTYPE html>
-<html>
-<head>
-<meta charset="UTF-8">
-<title>成績登録</title>
+	<c:param name="content">
+		<div id="wrap_box">            <!-- 見出し -->
+            <h2 class="h3 mb-3 fw-normal bg-secondary bg-opacity-10 py-2">
+                成績管理
+            </h2>
 
-<style>
+            <!-- 白枠 -->
+            <div class="border rounded p-4 bg-white">
 
-body{
-    margin:0;
-    background-color:#f5f5f5;
-    font-family:sans-serif;
-}
+                <form action="" method="post">
 
-.main{
-    width:900px;
-    margin:30px auto;
-    background-color:white;
-    padding:20px;
-}
+                    <div class="d-flex align-items-end gap-4">
 
-.title{
-    background-color:#e9e9e9;
-    padding:10px;
-    font-size:30px;
-    font-weight:bold;
-    margin-bottom:20px;
-}
+                        <!-- 入学年度 -->
+                        <div>
 
-.search-box{
-    border:1px solid #dcdcdc;
-    border-radius:5px;
-    padding:20px;
-}
+                            <label class="form-label">
+                                入学年度
+                            </label>
 
-.form-row{
-    display:flex;
-    align-items:flex-end;
-    gap:20px;
-}
+                            <select name="entYear"
+                                    class="form-select">
 
-.item{
-    display:flex;
-    flex-direction:column;
-}
+                                <option value="">
+                                    --------
+                                </option>
 
-label{
-    margin-bottom:5px;
-    font-size:14px;
-}
+                                <c:forEach var="year"
+                                           items="${entYearSet}">
 
-select{
-    width:180px;
-    height:35px;
-    border:1px solid #ccc;
-    border-radius:5px;
-    padding:5px;
-}
+                                    <option value="${year}">
+                                        ${year}
+                                    </option>
 
-button{
-    width:70px;
-    height:35px;
-    border:none;
-    border-radius:5px;
-    background-color:#6c757d;
-    color:white;
-    cursor:pointer;
-}
+                                </c:forEach>
 
-</style>
-</head>
+                            </select>
 
-<body>
+                        </div>
 
-<div class="main">
+                        <!-- クラス -->
+                        <div>
 
-    <div class="title">
-        成績管理
-    </div>
+                            <label class="form-label">
+                                クラス
+                            </label>
 
-    <div class="search-box">
+                            <select name="classNum"
+                                    class="form-select">
 
-        <form action="" method="post">
+                                <option value="">
+                                    --------
+                                </option>
 
-            <div class="form-row">
+                                <c:forEach var="c"
+                                           items="${classNumSet}">
 
-                <!-- 入学年度 -->
-                <div class="item">
+                                    <option value="${c}">
+                                        ${c}
+                                    </option>
 
-                    <label>入学年度</label>
+                                </c:forEach>
 
-                    <select name="entYear">
+                            </select>
 
-                        <option value="">--------</option>
+                        </div>
 
-                        <c:forEach var="year"
-                                   items="${entYearSet}">
+                        <!-- 科目 -->
+                        <div>
 
-                            <option value="${year}">
-                                ${year}
-                            </option>
+                            <label class="form-label">
+                                科目
+                            </label>
 
-                        </c:forEach>
+                            <select name="subject"
+                                    class="form-select">
 
-                    </select>
+                                <option value="">
+                                    --------
+                                </option>
 
-                </div>
+                                <c:forEach var="sub"
+                                           items="${subjectList}">
 
-                <!-- クラス -->
-                <div class="item">
+                                    <option value="${sub.cd}">
+                                        ${sub.name}
+                                    </option>
 
-                    <label>クラス</label>
+                                </c:forEach>
 
-                    <select name="classNum">
+                            </select>
 
-                        <option value="">--------</option>
+                        </div>
 
-                        <c:forEach var="c"
-                                   items="${classNumSet}">
+                        <!-- 回数 -->
+                        <div>
 
-                            <option value="${c}">
-                                ${c}
-                            </option>
+                            <label class="form-label">
+                                回数
+                            </label>
 
-                        </c:forEach>
+                            <select name="count"
+                                    class="form-select">
 
-                    </select>
+                                <option value="">
+                                    --------
+                                </option>
 
-                </div>
+                                <option value="1">
+                                    1
+                                </option>
 
-                <!-- 科目 -->
-                <div class="item">
+                                <option value="2">
+                                    2
+                                </option>
 
-                    <label>科目</label>
+                            </select>
 
-                    <select name="subject">
+                        </div>
 
-                        <option value="">--------</option>
+                        <!-- 検索ボタン -->
+                        <div>
 
-                        <c:forEach var="sub"
-                                   items="${subjectList}">
+                            <button type="submit"
+                                    class="btn btn-secondary">
 
-                            <option value="${sub.cd}">
-                                ${sub.name}
-                            </option>
+                                検索
 
-                        </c:forEach>
-
-                    </select>
-
-                </div>
-
-                <!-- 回数 -->
-                <div class="item">
-
-                    <label>回数</label>
-
-                    <select name="count">
-
-                        <option value="">--------</option>
-                        <option value="1">1</option>
-                        <option value="2">2</option>
-
-                    </select>
-
-                </div>
-
-                <!-- ボタン -->
-                <div class="item">
-
-                    <button type="submit">
-                        検索
-                    </button>
-
-                </div>
-
+                            </button>
+                        </div>
+                    </div>
+                </form>
             </div>
-
-        </form>
-
-    </div>
-
-</div>
-
-</body>
-</html>
+        </div>
+    </c:param>
+</c:import>
