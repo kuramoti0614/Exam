@@ -80,7 +80,10 @@ public class TestListSubjectDao extends Dao {
 
         } catch (SQLException e) {
             e.printStackTrace();
-        }
+        } catch (Exception e1) {
+			// TODO 自動生成された catch ブロック
+			e1.printStackTrace();
+		}
         return list;
     }
 }
