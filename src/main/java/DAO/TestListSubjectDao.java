@@ -15,19 +15,21 @@ import bean.TestListSubject;
 
 public class TestListSubjectDao extends Dao {
 
-    private String baseSql =
+    private static final String BASE_SQL =
         "SELECT s.ENT_YEAR, s.NO AS STUDENT_NO, s.NAME AS STUDENT_NAME, " +
         "       s.CLASS_NUM, t.NO AS TEST_NO, t.POINT " +
         " FROM STUDENT s " +
-        " JOIN TEST t ON s.NO = t.STUDENT_NO " +
-        "           AND s.SCHOOL_CD = t.SCHOOL_CD " +
+        " LEFT JOIN TEST t " +
+        "        ON s.NO = t.STUDENT_NO " +
+        "       AND s.SCHOOL_CD = t.SCHOOL_CD " +
+        "       AND t.SUBJECT_CD = ? " +
         " WHERE s.ENT_YEAR = ? " +
         "   AND s.CLASS_NUM = ? " +
-        "   AND t.SUBJECT_CD = ? " +
         "   AND s.SCHOOL_CD = ? " +
         " ORDER BY s.NO, t.NO";
 
-    protected List<TestListSubject> postFilter(ResultSet rs) throws SQLException {
+    protected List<TestListSubject> postFilter(ResultSet rs)
+            throws SQLException {
 
         Map<String, TestListSubject> map = new LinkedHashMap<>();
 
@@ -44,12 +46,14 @@ public class TestListSubjectDao extends Dao {
                 map.put(studentNo, tls);
             }
 
-            tls.putPoint(
-                rs.getInt("TEST_NO"),
-                rs.getInt("POINT")
-            );
-        }
+            Integer testNo = rs.getObject("TEST_NO", Integer.class);
+            Integer point  = rs.getObject("POINT", Integer.class);
 
+            // テスト回数が存在する場合のみ追加
+            if (testNo != null) {
+                tls.putPoint(testNo, point);  // point は null 許容
+            }
+        }
         return new ArrayList<>(map.values());
     }
 
@@ -63,20 +67,20 @@ public class TestListSubjectDao extends Dao {
 
         try (
             Connection con = getConnection();
-            PreparedStatement ps = con.prepareStatement(baseSql)
+            PreparedStatement ps = con.prepareStatement(BASE_SQL)
         ) {
-            ps.setInt(1, entYear);
-            ps.setString(2, classNum);
-            ps.setString(3, subject.getCd());
+            ps.setString(1, subject.getCd());
+            ps.setInt(2, entYear);
+            ps.setString(3, classNum);
             ps.setString(4, school.getCd());
 
-            ResultSet rs = ps.executeQuery();
-            list = postFilter(rs);
+            try (ResultSet rs = ps.executeQuery()) {
+                list = postFilter(rs);
+            }
 
-        } catch (Exception e) {
+        } catch (SQLException e) {
             e.printStackTrace();
         }
-
         return list;
     }
 }

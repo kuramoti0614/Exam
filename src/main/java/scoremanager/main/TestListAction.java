@@ -15,7 +15,7 @@ public class TestListAction extends Action {
 
         RequestDispatcher rd =
             req.getRequestDispatcher(
-                "/WEB-INF/jsp/test_list.jsp");
+                "test_list.jsp");
 
         rd.forward(req, res);
     }
