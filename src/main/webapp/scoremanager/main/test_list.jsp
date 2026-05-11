@@ -1,175 +1,75 @@
 <%@ page contentType="text/html; charset=UTF-8" %>
 <%@ taglib prefix="c" uri="jakarta.tags.core" %>
 
-<!DOCTYPE html>
-<html>
-<head>
-<meta charset="UTF-8">
-<title>成績参照</title>
+<c:import url="/common/base.jsp">
+    <c:param name="title">成績参照</c:param>
 
-<style>
+    <c:param name="scripts"></c:param>
 
-body{
-    font-family: sans-serif;
-    background-color: white;
-}
+    <c:param name="content">
+        <section class="container mt-4">
+            <h2 class="h3 mb-3 fw-normal bg-secondary bg-opacity-10 py-2 px-4">成績参照</h2>
 
-.main{
-    width: 1000px;
-    margin: 30px auto;
-}
+            <!-- 科目情報 -->
+            <form action="" method="post" class="border rounded p-3 mb-4 bg-white">
+                <div class="row align-items-center g-3">
+                    <div class="col-auto fw-bold">科目情報</div>
 
-/* 成績参照の部分 */
-.title{
-    background-color: #eeeeee;
-    padding: 15px 20px;
-    font-size: 32px;
-    font-weight: bold;
-    margin-bottom: 20px;
-}
+                    <div class="col-auto">
+                        <label for="entYear" class="form-label mb-1">入学年度</label>
+                        <select id="entYear" name="entYear" class="form-select">
+                            <option value="">--------</option>
+                        </select>
+                    </div>
 
-/* 白いボックス */
-.box{
-    border: 1px solid #dcdcdc;
-    border-radius: 5px;
-    background-color: white;
-    padding: 25px;
-}
+                    <div class="col-auto">
+                        <label for="classNum" class="form-label mb-1">クラス</label>
+                        <select id="classNum" name="classNum" class="form-select">
+                            <option value="">--------</option>
+                        </select>
+                    </div>
 
-.row{
-    display: flex;
-    align-items: center;
-    gap: 20px;
-}
+                    <div class="col-auto">
+                        <label for="subject" class="form-label mb-1">科目</label>
+                        <select id="subject" name="subject" class="form-select">
+                            <option value="">--------</option>
+                        </select>
+                    </div>
 
-.left-title{
-    width: 100px;
-    font-weight: bold;
-}
+                    <div class="col-auto">
+                        <button type="submit" class="btn btn-secondary">検索</button>
+                    </div>
+                </div>
+            </form>
 
-.item{
-    display: flex;
-    flex-direction: column;
-}
-
-.item label{
-    margin-bottom: 8px;
-    font-size: 14px;
-}
-
-select,
-input[type="text"]{
-    width: 180px;
-    padding: 8px;
-    border: 1px solid #cccccc;
-    border-radius: 4px;
-}
-
-.btn{
-    margin-top: 24px;
-    padding: 8px 18px;
-    border: none;
-    border-radius: 4px;
-    background-color: #6c757d;
-    color: white;
-    cursor: pointer;
-}
-
-.line{
-    border-top: 1px solid #e0e0e0;
-    margin: 25px 0;
-}
-
-.message{
-    margin-top: 20px;
-    color: #46b8da;
-    font-size: 14px;
-}
-
-</style>
-
-</head>
-<body>
-
-<div class="main">
-
-    <!-- タイトル -->
-    <div class="title">
-        成績参照
+<!-- エラーメッセージ表示 -->
+<c:if test="${not empty errorMessage}">
+    <div class="alert alert-danger mt-3">
+        ${errorMessage}
     </div>
+</c:if>
 
-    <!-- 白枠 -->
-    <div class="box">
 
-        <!-- 科目情報 -->
-        <form action="" method="post">
+            <!-- 学生情報 -->
+            <form action="TestListStudentExecute.action" method="post" class="border rounded p-3 bg-white">
+                <div class="row align-items-center g-3">
+                    <div class="col-auto fw-bold">学生情報</div>
 
-            <div class="row">
+                    <div class="col-auto">
+                        <label for="studentNo" class="form-label mb-1">学生番号</label>
+                        <input type="text" id="studentNo" name="studentNo" class="form-control"
+                               placeholder="学生番号を入力してください"required>
+                    </div>
 
-                <div class="left-title">
-                    科目情報
+                    <div class="col-auto">
+                        <button type="submit" class="btn btn-secondary">検索</button>
+                    </div>
                 </div>
+            </form>
 
-                <div class="item">
-                    <label>入学年度</label>
-                    <select name="entYear">
-                        <option value="">--------</option>
-                    </select>
-                </div>
-
-                <div class="item">
-                    <label>クラス</label>
-                    <select name="classNum">
-                        <option value="">--------</option>
-                    </select>
-                </div>
-
-                <div class="item">
-                    <label>科目</label>
-                    <select name="subject">
-                        <option value="">--------</option>
-                    </select>
-                </div>
-
-
-            </div>
-
-        </form>
-
-        <div class="line"></div>
-
-        <!-- 学生情報 -->
-        <form action="TestListStudentExecute.action" method="post">
-
-            <div class="row">
-
-                <div class="left-title">
-                    学生情報
-                </div>
-
-                <div class="item">
-                    <label>学生番号</label>
-
-                    <input type="text"
-                           name="studentNo"
-                           placeholder="学生番号を入力してください">
-                </div>
-
-                <input type="submit"
-                       value="検索"
-                       class="btn">
-
-            </div>
-
-        </form>
-
-    </div>
-
-    <div class="message">
-        科目情報を選択または学生情報を入力して検索ボタンをクリックしてください
-    </div>
-
-</div>
-
-</body>
-</html>
+            <p class="text-info mt-3">
+                科目情報を選択または学生情報を入力して検索ボタンをクリックしてください
+            </p>
+        </section>
+    </c:param>
+</c:import>
