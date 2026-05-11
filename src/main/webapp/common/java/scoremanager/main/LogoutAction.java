@@ -1,16 +1,19 @@
 package scoremanager.main;
 
+
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 import tool.Action;
 
-public class MenuAction extends Action {
-
+public class LogoutAction extends Action {
+	
 	@Override
-	public void execute(HttpServletRequest req, HttpServletResponse res) throws Exception {
-
+	public void execute(HttpServletRequest req, HttpServletResponse res)
+			throws Exception {
 		//ローカル変数の宣言 1
-		//なし
+		String url = "";
+		HttpSession session=req.getSession();
 
 		//リクエストパラメータ―の取得 2
 		//なし
@@ -19,7 +22,9 @@ public class MenuAction extends Action {
 		//なし
 
 		//ビジネスロジック 4
-		//なし
+		if (session.getAttribute("user") != null) {
+			session.invalidate();
+		}
 
 		//DBへデータ保存 5
 		//なし
@@ -28,6 +33,8 @@ public class MenuAction extends Action {
 		//なし
 
 		//JSPへフォワード 7
-		req.getRequestDispatcher("menu.jsp").forward(req, res);
+		url = "logout.jsp";
+		req.getRequestDispatcher(url).forward(req, res);
 	}
+
 }

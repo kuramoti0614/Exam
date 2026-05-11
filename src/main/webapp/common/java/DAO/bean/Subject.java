@@ -1,4 +1,3 @@
-
 package bean;
 
 public class Subject {
@@ -33,4 +32,3 @@ public class Subject {
         this.school = school;
     }
 }
-
