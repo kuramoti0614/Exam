@@ -30,8 +30,7 @@ public class SubjectListAction extends Action {
         // JSPで表示するために科目リストをリクエスト属性に格納
         req.setAttribute("subjects", subjects);
 
-        // 4. JSPへフォワード
-        // フォワード先を科目一覧用のJSP（subject_list.jspなど）に変更
-        req.getRequestDispatcher("subject_list.jsp").forward(req, res);
+		// JSPへフォワード 
+		req.getRequestDispatcher("subject_list.jsp").forward(req, res);
     }
 }
