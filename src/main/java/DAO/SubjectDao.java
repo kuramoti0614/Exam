@@ -165,4 +165,33 @@ public class SubjectDao extends Dao {
             return ps.executeUpdate() == 1;
         }
     }
+
+    public List<Subject> filterBySchool(String schoolCd) throws Exception {
+
+        List<Subject> list = new ArrayList<>();
+
+        String sql =
+            "SELECT cd, name FROM subject WHERE school_cd = ? ORDER BY cd";
+
+        try (
+            Connection conn = getConnection();
+            PreparedStatement ps = conn.prepareStatement(sql)
+        ) {
+            ps.setString(1, schoolCd);
+            ResultSet rs = ps.executeQuery();
+
+            while (rs.next()) {
+                Subject subject = new Subject();
+                subject.setCd(rs.getString("cd"));
+                subject.setName(rs.getString("name"));
+
+                School school = new School();
+                school.setCd(schoolCd);
+                subject.setSchool(school);
+
+                list.add(subject);
+            }
+        }
+        return list;
+    }
 }

@@ -13,9 +13,16 @@ import bean.TestListStudent;
 public class TestListStudentDao extends Dao {
 
     private static final String BASE_SQL =
-        "SELECT subject_name, subject_cd, num, point " +
-        "FROM test " +
-        "WHERE student_no = ?";
+        "SELECT s.name AS subject_name, " +
+        "       s.cd   AS subject_cd, " +
+        "       t.no   AS num, " +
+        "       t.point " +
+        "FROM subject s " +
+        "LEFT JOIN test t " +
+        "       ON s.cd = t.subject_cd " +
+        "      AND t.student_no = ? " +
+        "      AND t.school_cd  = ? " +
+        "ORDER BY s.cd, t.no";
 
     protected List<TestListStudent> postFilter(ResultSet rs)
             throws SQLException {
@@ -29,9 +36,8 @@ public class TestListStudentDao extends Dao {
             t.setSubjectCd(rs.getString("subject_cd"));
             t.setNum(rs.getInt("num"));
 
-            // --- point が NULL か判定 ---
             Integer point = rs.getObject("point", Integer.class);
-            t.setPoint(point);   // null のままセットできる
+            t.setPoint(point); // NULL 許容
 
             list.add(t);
         }
@@ -47,17 +53,15 @@ public class TestListStudentDao extends Dao {
             PreparedStatement ps = con.prepareStatement(BASE_SQL)
         ) {
             ps.setString(1, student.getNo());
+            ps.setString(2, student.getSchool().getCd());
 
             try (ResultSet rs = ps.executeQuery()) {
                 list = postFilter(rs);
             }
 
-        } catch (SQLException e) {
+        } catch (Exception e) {
             e.printStackTrace();
-        } catch (Exception e1) {
-			// TODO 自動生成された catch ブロック
-			e1.printStackTrace();
-		}
+        }
         return list;
     }
 }

@@ -19,6 +19,11 @@
                         <label for="entYear" class="form-label mb-1">入学年度</label>
                         <select id="entYear" name="entYear" class="form-select">
                             <option value="">--------</option>
+                            
+<c:forEach var="year" items="${entYearSet}">
+        <option value="${year}">${year}</option>
+    </c:forEach>
+                            
                         </select>
                     </div>
 
@@ -26,6 +31,11 @@
                         <label for="classNum" class="form-label mb-1">クラス</label>
                         <select id="classNum" name="classNum" class="form-select">
                             <option value="">--------</option>
+                            
+   <c:forEach var="c" items="${classNumSet}">
+        <option value="${c}">${c}</option>
+    </c:forEach>
+                            
                         </select>
                     </div>
 
@@ -33,6 +43,11 @@
                         <label for="subject" class="form-label mb-1">科目</label>
                         <select id="subject" name="subject" class="form-select">
                             <option value="">--------</option>
+                            
+<c:forEach var="s" items="${subjectList}">
+        <option value="${s.cd}">${s.name}</option>
+    </c:forEach>
+                            
                         </select>
                     </div>
 

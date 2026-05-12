@@ -1,63 +1,54 @@
 package DAO;
 
 import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.PreparedStatement;
-import java.sql.SQLException;
+import java.sql.ResultSet;
+import java.util.ArrayList;
+import java.util.List;
 
+import bean.School;
+import bean.Student;
+import bean.Subject;
 import bean.Test;
 
 public class TestDao {
 
-    // H2 DB接続情報
-    private static final String URL =
-            "jdbc:h2:~/test";
+    public List<Test> findAll() throws Exception {
 
-    private static final String USER = "sa";
-    private static final String PASSWORD = "";
-
-    /**
-     * 成績登録
-     */
-    public boolean insert(Test test) {
-
-        boolean result = false;
+        List<Test> list = new ArrayList<>();
 
         String sql =
-            "INSERT INTO test(student_no, subject_cd, score) VALUES(?, ?, ?)";
+            "SELECT student_no, subject_cd, school_cd, no, point, class_num " +
+            "FROM test ORDER BY student_no, subject_cd, no";
 
-        try {
-            // H2ドライバ読み込み
-            Class.forName("org.h2.Driver");
+        try (
+            Connection con = new Dao().getConnection();
+            PreparedStatement ps = con.prepareStatement(sql);
+            ResultSet rs = ps.executeQuery();
+        ) {
+            while (rs.next()) {
 
-            // DB接続
-            Connection conn =
-                    DriverManager.getConnection(URL, USER, PASSWORD);
+                Student student = new Student();
+                student.setNo(rs.getString("student_no"));
 
-            // SQL準備
-            PreparedStatement ps =
-                    conn.prepareStatement(sql);
+                Subject subject = new Subject();
+                subject.setCd(rs.getString("subject_cd"));
 
-            // 値セット
-            ps.setString(1, test.getStudentNo());
-            ps.setString(2, test.getSubjectCd());
-            ps.setInt(3, test.getScore());
+                School school = new School();
+                school.setCd(rs.getString("school_cd"));
 
-            // 実行
-            int count = ps.executeUpdate();
+                Test test = new Test();
+                test.setStudent(student);
+                test.setSubject(subject);
+                test.setSchool(school);
+                test.setNo(rs.getInt("no"));
+                test.setPoint(rs.getInt("point"));
+                test.setClassNum(rs.getString("class_num"));
 
-            if (count > 0) {
-                result = true;
+                list.add(test);
             }
-
-            // クローズ
-            ps.close();
-            conn.close();
-
-        } catch (ClassNotFoundException | SQLException e) {
-            e.printStackTrace();
         }
 
-        return result;
+        return list;
     }
 }

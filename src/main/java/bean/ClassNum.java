@@ -2,19 +2,22 @@ package bean;
 
 public class ClassNum {
 
-    private String class_num;   // クラス番号
+    private String classNum;
     private School school;
-	public String getClass_num() {
-		return class_num;
-	}
-	public void setClass_num(String class_num) {
-		this.class_num = class_num;
-	}
-	public School getSchool() {
-		return school;
-	}
-	public void setSchool(School school) {
-		this.school = school;
-	}     // 学校
 
+    public String getClassNum() {     // ★ 修正
+        return classNum;
+    }
+
+    public void setClassNum(String classNum) {   // ★ 修正
+        this.classNum = classNum;
+    }
+
+    public School getSchool() {
+        return school;
+    }
+
+    public void setSchool(School school) {
+        this.school = school;
+    }
 }

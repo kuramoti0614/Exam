@@ -27,7 +27,7 @@ public class TestListStudentExecuteAction extends Action {
 
             RequestDispatcher rd =
                 req.getRequestDispatcher(
-                    "/WEB-INF/jsp/test_list_student.jsp");
+                    "test_list_student.jsp");
             rd.forward(req, res);
             return;
         }
@@ -52,7 +52,7 @@ public class TestListStudentExecuteAction extends Action {
         // --- JSP へフォワード ---
         RequestDispatcher rd =
             req.getRequestDispatcher(
-                "/WEB-INF/jsp/test_list_student.jsp");
+                "test_list.jsp");
         rd.forward(req, res);
     }
 }

@@ -40,7 +40,7 @@ public class ClassNumDao extends Dao {
             if (rSet.next()) {
                 classNum = new ClassNum();
                 // 取得した class_num をセット
-                classNum.setClass_num(rSet.getString("class_num"));
+                classNum.setClassNum(rSet.getString("class_num"));
                 // 引数で渡された School オブジェクトをそのままセット
                 classNum.setSchool(school);
             }
@@ -111,7 +111,7 @@ public class ClassNumDao extends Dao {
                 "INSERT INTO class_num (class_num, school_cd) VALUES (?, ?)"
             );
             // 1 番目のプレースホルダにクラス番号をセット
-            statement.setString(1, classNum.getClass_num());
+            statement.setString(1, classNum.getClassNum());
             // 2 番目のプレースホルダに学校コードをセット
             statement.setString(2, classNum.getSchool().getCd());
 
@@ -149,7 +149,7 @@ public class ClassNumDao extends Dao {
             // 新しいクラス番号をセット
             statement.setString(1, newClassNum);
             // 変更前のクラス番号をセット
-            statement.setString(2, classNum.getClass_num());
+            statement.setString(2, classNum.getClassNum());
             // 学校コードをセット
             statement.setString(3, classNum.getSchool().getCd());
 
@@ -165,7 +165,7 @@ public class ClassNumDao extends Dao {
             // 新しいクラス番号をセット
             statement.setString(1, newClassNum);
             // 変更前のクラス番号をセット
-            statement.setString(2, classNum.getClass_num());
+            statement.setString(2, classNum.getClassNum());
             // 学校コードをセット
             statement.setString(3, classNum.getSchool().getCd());
 
@@ -181,7 +181,7 @@ public class ClassNumDao extends Dao {
             // 新しいクラス番号をセット
             statement.setString(1, newClassNum);
             // 変更前のクラス番号をセット
-            statement.setString(2, classNum.getClass_num());
+            statement.setString(2, classNum.getClassNum());
             // 学校コードをセット
             statement.setString(3, classNum.getSchool().getCd());
 
@@ -199,4 +199,33 @@ public class ClassNumDao extends Dao {
         // ※ 1 テーブルにつき最低 1 件更新されることを期待しているロジック
         return count > 3;
     }
+
+
+//★ Action から使う専用メソッド
+public List<ClassNum> filterBySchool(String schoolCd) throws Exception {
+
+ List<ClassNum> list = new ArrayList<>();
+ String sql = "SELECT class_num FROM class_num WHERE school_cd = ? ORDER BY class_num";
+
+ try (
+     Connection connection = getConnection();
+     PreparedStatement statement = connection.prepareStatement(sql)
+ ) {
+     statement.setString(1, schoolCd);
+
+     ResultSet rSet = statement.executeQuery();
+
+     while (rSet.next()) {
+         ClassNum cn = new ClassNum();
+         cn.setClassNum(rSet.getString("class_num"));
+
+         School school = new School();
+         school.setCd(schoolCd);
+         cn.setSchool(school);
+
+         list.add(cn);
+     }
+ }
+ return list;
+}
 }
