@@ -1,57 +1,42 @@
-<%@ page contentType="text/html; charset=UTF-8" %>
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%-- 科目管理一覧JSP --%>
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8" %>
+<%@ taglib prefix="c" uri="jakarta.tags.core"%>
 
-<h2>科目別成績一覧</h2>
+<c:import url="/common/base.jsp">
+    <c:param name="title">得点管理システム</c:param>
 
-<table border="1">
-    <thead>
-        <tr>
-            <!-- ①～⑧ ヘッダー -->
-            <th>入学年度</th>
-            <th>クラス</th>
-            <th>学生番号</th>
-            <th>氏名</th>
-            <th>1回目</th>
-            <th>2回目</th>
-        </tr>
-    </thead>
+    <c:param name="scripts"></c:param>
 
-    <tbody>
-        <!-- ②～⑭ データ行 -->
-        <c:forEach var="score" items="${score_list}">
-            <tr>
-                <!-- ③ 入学年度 -->
-                <td>${score.student.entYear}</td>
+    <c:param name="content">
+        <section class="me-4">
+            <h2 class="h3 mb-3 fw-normal bg-secondary bg-opacity-10 py-2 px-4">科目管理</h2>
 
-                <!-- ④ クラス -->
-                <td>${score.student.classNum}</td>
+            <div class="my-2 text-end px-4">
+                <a href="SubjectCreate.action">新規登録</a>
+            </div>
 
-                <!-- ⑤ 学生番号 -->
-                <td>${score.student.no}</td>
+                    <!-- エラーメッセージ -->
+                    <div class="mt-2 text-warning">${errors.get("f1")}</div>
+                </div>
+            </form>
+                            <th>科目コード</th>
+                            <th>科目名</th>
+                            <th></th>
+                        </tr>
 
-                <!-- ⑥ 氏名 -->
-                <td>${score.student.name}</td>
+                           <c:forEach var="subject" items="${subject}">
+                            <tr>
+                                <td>${subject.cd}</td>
+                                <td>${subject.name}</td>
 
-                <!-- ⑦ 1回目の点数 -->
-                <td>
-                    <c:choose>
-                        <c:when test="${score.point1 != null}">
-                            ${score.point1}
-                        </c:when>
-                        <c:otherwise>-</c:otherwise>
-                    </c:choose>
-                </td>
-
-                <!-- ⑧ 2回目の点数 -->
-                <td>
-                    <c:choose>
-                        <c:when test="${score.point2 != null}">
-                            ${score.point2}
-                        </c:when>
-                        <c:otherwise>-</c:otherwise>
-                    </c:choose>
-                </td>
-            </tr>
-        </c:forEach>
-    </tbody>
-</table>
+                                <td>
+                                    <a href="SubjectUpdate.action?cd=${subject.cd}">変更</a>
+                                    <a href="SubjectDelete.action?cd=${subject.cd}">削除</a>
+                                </td>
+                            </tr>
+                        </c:forEach>
+                    </table>
+        </section>
+    </c:param>
+</c:import>
