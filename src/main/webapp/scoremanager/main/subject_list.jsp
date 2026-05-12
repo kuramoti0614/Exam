@@ -25,7 +25,7 @@
                             <th></th>
                         </tr>
 
-                           <c:forEach var="subject" items="${subject}">
+                           <c:forEach var="subjects" items="${subjects}">
                             <tr>
                                 <td>${subject.cd}</td>
                                 <td>${subject.name}</td>
@@ -36,7 +36,6 @@
                                 </td>
                             </tr>
                         </c:forEach>
-                    </table>
         </section>
     </c:param>
 </c:import>
