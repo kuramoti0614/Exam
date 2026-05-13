@@ -2,10 +2,12 @@ package scoremanager.main;
 
 import java.util.List;
 
+import DAO.SubjectDao;
 import DAO.TestListStudentDao;
+import bean.School;
 import bean.Student;
+import bean.Subject;
 import bean.TestListStudent;
-import jakarta.servlet.RequestDispatcher;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import tool.Action;
@@ -13,46 +15,62 @@ import tool.Action;
 public class TestListStudentExecuteAction extends Action {
 
     @Override
-    public void execute(
-            HttpServletRequest req,
-            HttpServletResponse res)
-            throws Exception {
+    public void execute(HttpServletRequest req,
+                        HttpServletResponse res) throws Exception {
 
-        // --- リクエストパラメータ取得 ---
-        String studentNo = req.getParameter("student_no");
+        // ✅ パラメータ取得
+        String studentNo = req.getParameter("studentNo");
 
-        // --- 学生番号 未入力チェック ---
+        // ✅ 未入力チェック
         if (studentNo == null || studentNo.isEmpty()) {
-            req.setAttribute("errorMessage", "このフィールドを入力してください");
+            req.setAttribute("errorMessage", "学生番号を入力してください");
 
-            RequestDispatcher rd =
-                req.getRequestDispatcher(
-                    "test_list_student.jsp");
-            rd.forward(req, res);
+            req.getRequestDispatcher("test_list_student.jsp")
+               .forward(req, res);
             return;
         }
 
-        // --- Student Bean 作成 ---
+        // ✅ Student作成
         Student student = new Student();
         student.setNo(studentNo);
 
-        // --- DAO 呼び出し ---
+        // ✅ DAO
         TestListStudentDao dao = new TestListStudentDao();
         List<TestListStudent> list = dao.filter(student);
 
-        // --- 成績情報が存在しない場合 ---
+        // ✅ データなし
         if (list == null || list.isEmpty()) {
             req.setAttribute("errorMessage", "成績情報が存在しませんでした");
+            
+            
+            
+            
+            
+        }
+        
+        
+        Subject subject = null;
+
+        if (list != null && !list.isEmpty()) {
+
+            // 1件目の科目コード取得
+            String subjectCd = list.get(0).getSubjectCd();
+
+            SubjectDao subjectDao = new SubjectDao();
+
+            School school = new School();
+            school.setCd("oom");
+
+            subject = subjectDao.get(subjectCd, school);
         }
 
-        // --- リクエストスコープへ保存 ---
-        req.setAttribute("testlist", list);
+        // ✅ 属性セット（統一）
         req.setAttribute("student", student);
+        req.setAttribute("testList", list);
+        req.setAttribute("subject", subject);
 
-        // --- JSP へフォワード ---
-        RequestDispatcher rd =
-            req.getRequestDispatcher(
-                "test_list.jsp");
-        rd.forward(req, res);
+        // ✅ 画面遷移
+        req.getRequestDispatcher("test_list_student.jsp")
+           .forward(req, res);
     }
 }
