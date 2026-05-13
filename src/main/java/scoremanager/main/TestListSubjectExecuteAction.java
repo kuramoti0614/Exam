@@ -24,7 +24,8 @@ public class TestListSubjectExecuteAction extends Action {
 
         String schoolCd = "oom";
 
-        // ================= 初期表示用データ（必須） =================
+        /* ========= 初期表示用データ ========= */
+
         // 入学年度
         Set<Integer> entYearSet = new TreeSet<>();
         for (int y = 2019; y <= 2026; y++) {
@@ -39,7 +40,7 @@ public class TestListSubjectExecuteAction extends Action {
             classNumSet.add(c.getClassNum());
         }
 
-        // 科目
+        // 科目一覧
         SubjectDao subjectDao = new SubjectDao();
         List<Subject> subjectList = subjectDao.filterBySchool(schoolCd);
 
@@ -47,12 +48,12 @@ public class TestListSubjectExecuteAction extends Action {
         req.setAttribute("classNumSet", classNumSet);
         req.setAttribute("subjectList", subjectList);
 
-        // ================= 検索条件取得 =================
-        String entYearStr = req.getParameter("ent_year");
-        String classNum   = req.getParameter("class_num");
-        String subjectCd  = req.getParameter("subject_cd");
+        /* ========= 検索条件取得 ========= */
 
-        // 未入力チェック
+        String entYearStr = req.getParameter("entYear");
+        String classNum   = req.getParameter("classNum");
+        String subjectCd  = req.getParameter("subjectCd");
+
         if (entYearStr == null || entYearStr.isEmpty()
                 || classNum == null || classNum.isEmpty()
                 || subjectCd == null || subjectCd.isEmpty()) {
@@ -62,28 +63,33 @@ public class TestListSubjectExecuteAction extends Action {
                 "入学年度・クラス・科目を選択してください"
             );
 
-            req.getRequestDispatcher("test_list_subject.jsp")
+            // ★ 統一：常に test_list.jsp
+            req.getRequestDispatcher("test_list.jsp")
                .forward(req, res);
             return;
         }
 
         int entYear = Integer.parseInt(entYearStr);
 
-        // ================= 成績検索 =================
-        Subject subject = new Subject();
-        subject.setCd(subjectCd);
+        /* ========= 成績検索 ========= */
+
+        // 科目情報（nameもセット）
+        Subject subject = subjectDao.get(subjectCd, new School(){{
+            setCd(schoolCd);
+        }});
 
         School school = new School();
         school.setCd(schoolCd);
 
         TestListSubjectDao dao = new TestListSubjectDao();
         List<TestListSubject> testList =
-            dao.filter(entYear, classNum, subject, school);
+                dao.filter(entYear, classNum, subject, school);
 
         req.setAttribute("testList", testList);
         req.setAttribute("subject", subject);
 
-        // ================= 同じ画面に戻す =================
+        /* ========= 同一画面へ戻す ========= */
+
         req.getRequestDispatcher("test_list.jsp")
            .forward(req, res);
     }

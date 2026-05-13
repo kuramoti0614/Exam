@@ -52,8 +52,10 @@ public class TestListSubject {
         this.points = points;
     }
 
-	public void putPoint(int int1, int int2) {
-		// TODO 自動生成されたメソッド・スタブ
-		
-	}
+    public void putPoint(int num, Integer point) {
+        if (points == null) {
+            points = new java.util.HashMap<>();
+        }
+        points.put(num, point);
+    }
 }

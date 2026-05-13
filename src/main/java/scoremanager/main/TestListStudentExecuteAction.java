@@ -46,8 +46,8 @@ public class TestListStudentExecuteAction extends Action {
         }
 
         // --- リクエストスコープへ保存 ---
-        req.setAttribute("list", list);
-        req.setAttribute("studentNo", studentNo);
+        req.setAttribute("testlist", list);
+        req.setAttribute("student", student);
 
         // --- JSP へフォワード ---
         RequestDispatcher rd =

@@ -14,6 +14,21 @@
                 成績一覧（学生）
             </h2>
 
+            <!-- 🔽 検索フォーム -->
+            <form method="get" action="StudentScore">
+                <div class="row mb-3">
+                    <div class="col-auto">
+                        <input type="text" name="studentNo"
+                               class="form-control"
+                               placeholder="学籍番号を入力"
+                               value="${param.studentNo}">
+                    </div>
+                    <div class="col-auto">
+                        <button type="submit" class="btn btn-primary">検索</button>
+                    </div>
+                </div>
+            </form>
+
             <!-- 学生情報 -->
             <c:if test="${not empty student}">
                 <div class="mb-2 fw-bold">
@@ -23,7 +38,6 @@
 
             <!-- 成績一覧 -->
             <c:if test="${not empty testList}">
-
                 <table class="table table-bordered">
                     <thead>
                         <tr>
@@ -52,13 +66,21 @@
                         </c:forEach>
                     </tbody>
                 </table>
-
             </c:if>
 
-            <c:if test="${empty testList}">
-                <div class="text-warning fw-bold mt-3">
-                    成績情報が存在しませんでした
-                </div>
+            <!-- 🔽 検索後のみメッセージ表示 -->
+            <c:if test="${param.studentNo != null}">
+                <c:if test="${empty student}">
+                    <div class="text-danger fw-bold mt-3">
+                        該当する学生が存在しません
+                    </div>
+                </c:if>
+
+                <c:if test="${not empty student and empty testList}">
+                    <div class="text-warning fw-bold mt-3">
+                        成績情報が存在しませんでした
+                    </div>
+                </c:if>
             </c:if>
 
         </section>

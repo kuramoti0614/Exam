@@ -62,11 +62,15 @@
                 </table>
             </c:if>
 
-            <c:if test="${empty testList}">
-                <div class="text-warning fw-bold mt-3">
-                    成績情報が存在しませんでした
-                </div>
-            </c:if>
+            
+<c:if test="${param.subjectCd != null}">
+    <c:if test="${empty testList}">
+        <div class="text-warning fw-bold mt-3">
+            成績情報が存在しませんでした
+        </div>
+    </c:if>
+</c:if>
+            
 
         </section>
 

@@ -56,7 +56,20 @@ public class TestListStudentDao extends Dao {
             ps.setString(2, student.getSchool().getCd());
 
             try (ResultSet rs = ps.executeQuery()) {
-                list = postFilter(rs);
+                while (rs.next()) {
+                    TestListStudent t = new TestListStudent();
+
+                    t.setSubjectName(rs.getString("subject_name"));
+                    t.setSubjectCd(rs.getString("subject_cd"));
+
+                    Integer num = rs.getObject("num", Integer.class);
+                    t.setNum(num);
+
+                    Integer point = rs.getObject("point", Integer.class);
+                    t.setPoint(point);
+
+                    list.add(t);
+                }
             }
 
         } catch (Exception e) {
@@ -65,3 +78,4 @@ public class TestListStudentDao extends Dao {
         return list;
     }
 }
+    
