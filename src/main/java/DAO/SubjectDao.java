@@ -194,4 +194,31 @@ public class SubjectDao extends Dao {
         }
         return list;
     }
+    /**
+     * 科目情報を更新する
+     *
+     * @param subject 更新対象科目
+     * @return 更新成功時true
+     */
+    public boolean update(Subject subject) throws Exception {
+
+        // UPDATE文
+        String sql =
+            "UPDATE subject SET name = ? WHERE cd = ? AND school_cd = ?";
+
+        // DB接続
+        try (
+            Connection conn = getConnection();
+            PreparedStatement ps = conn.prepareStatement(sql)
+        ) {
+
+            // 値セット
+            ps.setString(1, subject.getName());
+            ps.setString(2, subject.getCd());
+            ps.setString(3, subject.getSchool().getCd());
+
+            // 更新実行
+            return ps.executeUpdate() == 1;
+        }
+    }
 }

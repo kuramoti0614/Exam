@@ -47,7 +47,7 @@ public class SubjectUpdateExecuteAction extends Action {
 
         // UPDATE文を実行
         // 戻り値が必要な設計（成否判定など）の場合は適宜調整してください
-        dao.save(subject); 
+        dao.update(subject); 
         // ※DAOのメソッド名がsaveかupdateかは、お使いのDAOの定義に合わせてください
 
         // ==================================================
