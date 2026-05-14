@@ -48,6 +48,7 @@ public class TestListSubjectExecuteAction extends Action {
         req.setAttribute("entYearSet", entYearSet);
         req.setAttribute("classNumSet", classNumSet);
         req.setAttribute("subjectList", subjectList);
+       
 
         /* ========= パラメータ ========= */
 
@@ -62,7 +63,7 @@ public class TestListSubjectExecuteAction extends Action {
 
             req.setAttribute("errorMessage",
                     "入学年度・クラス・科目を選択してください");
-
+            req.setAttribute("testList", null);
             req.getRequestDispatcher("test_list_subject.jsp")
                .forward(req, res);
             return;
@@ -73,11 +74,32 @@ public class TestListSubjectExecuteAction extends Action {
         /* ========= 検索 ========= */
 
         Subject subject = subjectDao.get(subjectCd, school);
+     // // ★ 科目情報を session に保持する（重要）
+        req.getSession().setAttribute("subject", subject);
 
+        
         TestListSubjectDao dao = new TestListSubjectDao();
 
         List<TestListSubject> testList =
                 dao.filter(entYear, classNum, subject, school);
+        
+     // ========= setPoints（テスト回数一覧）を動的に作成 =========
+        Set<Integer> setPoints = new TreeSet<>();
+
+        for (TestListSubject tls : testList) {
+            for (Integer testNo : tls.getPoints().keySet()) {
+                setPoints.add(testNo);
+            }
+        }
+
+        req.setAttribute("setPoints", setPoints);
+
+        
+        
+        
+        
+        
+        
         
      // ▼ 追加
         Student student = null;

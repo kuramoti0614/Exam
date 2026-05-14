@@ -68,11 +68,24 @@
 
         </div>
     </form>
-
+      
+      <!-- ================= 科目名（保持された subject） ================= -->
+<c:if test="${not empty subject}">
+    <div class="mt-4 fw-bold">
+        科目：${subject.name}
+    </div>
+</c:if>
+      
+      
     <!-- ================= 学生検索 ================= -->
     <form action="TestListStudentExecute.action" method="post"
           class="border rounded p-3 bg-white">
-
+         
+         <!-- ★ 科目検索の条件を hidden で引き継ぐ -->
+    <input type="hidden" name="entYear" value="${param.entYear}">
+    <input type="hidden" name="classNum" value="${param.classNum}">
+    <input type="hidden" name="subjectCd" value="${param.subjectCd}">
+         
         <div class="row align-items-center g-3">
 
             <div class="col-auto fw-bold">学生情報</div>

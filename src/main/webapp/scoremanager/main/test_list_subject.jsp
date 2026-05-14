@@ -7,7 +7,6 @@
 <c:param name="content">
 <section class="container mt-4">
 
-    <!-- タイトル -->
     <h2 class="h3 mb-3 fw-normal bg-secondary bg-opacity-10 py-2 px-4">
         成績参照
     </h2>
@@ -92,19 +91,16 @@
         </div>
     </form>
 
-    <!-- 説明 -->
     <p class="text-info mt-3">
         科目情報を選択または学生情報を入力して検索してください
     </p>
 
-    <!-- エラー -->
     <c:if test="${not empty errorMessage}">
         <div class="alert alert-danger mt-3">
             ${errorMessage}
         </div>
     </c:if>
 
-    <!-- ================= 科目表示 ================= -->
     <c:if test="${not empty subject}">
         <div class="mt-4 fw-bold">
             科目：${subject.name}
@@ -121,8 +117,11 @@
                     <th>クラス</th>
                     <th>学生番号</th>
                     <th>氏名</th>
-                    <th>1回</th>
-                    <th>2回</th>
+
+                    <!-- ★ 動的テスト回数 -->
+                    <c:forEach var="no" items="${setPoints}">
+                        <th>${no}回</th>
+                    </c:forEach>
                 </tr>
             </thead>
 
@@ -135,24 +134,17 @@
                         <td>${t.studentNo}</td>
                         <td>${t.studentName}</td>
 
-                        <!-- ✅ Map対応 -->
-                        <td>
-                            <c:choose>
-                                <c:when test="${t.points[1] != null}">
-                                    ${t.points[1]}
-                                </c:when>
-                                <c:otherwise>-</c:otherwise>
-                            </c:choose>
-                        </td>
-
-                        <td>
-                            <c:choose>
-                                <c:when test="${t.points[2] != null}">
-                                    ${t.points[2]}
-                                </c:when>
-                                <c:otherwise>-</c:otherwise>
-                            </c:choose>
-                        </td>
+                        <!-- ★ 動的点数表示 -->
+                        <c:forEach var="no" items="${setPoints}">
+                            <td>
+                                <c:choose>
+                                    <c:when test="${t.points[no] != null}">
+                                        ${t.points[no]}
+                                    </c:when>
+                                    <c:otherwise>-</c:otherwise>
+                                </c:choose>
+                            </td>
+                        </c:forEach>
 
                     </tr>
                 </c:forEach>
