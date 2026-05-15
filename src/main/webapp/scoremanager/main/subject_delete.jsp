@@ -99,15 +99,10 @@ body{
               method="post">
 
             <!-- hidden -->
-            <input
-                type="hidden"
-                name="subject_cd"
-                value="${subject.cd}">
-
-            <input
-                type="hidden"
-                name="subject_name"
-                value="${subject.name}">
+           <input
+               type="hidden"
+               name="cd"
+               value="${subject.cd}">
 
             <!-- 削除 -->
             <input
