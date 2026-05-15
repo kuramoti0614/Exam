@@ -228,4 +228,27 @@ public List<ClassNum> filterBySchool(String schoolCd) throws Exception {
  }
  return list;
 }
+
+
+public List<String> getClassNumSet(School school) throws Exception {
+
+    List<String> list = new ArrayList<>();
+
+    String sql = "SELECT DISTINCT class_num FROM student WHERE school_cd = ? ORDER BY class_num";
+
+    try (
+        Connection con = getConnection();
+        PreparedStatement ps = con.prepareStatement(sql)
+    ) {
+        ps.setString(1, school.getCd());
+        ResultSet rs = ps.executeQuery();
+
+        while (rs.next()) {
+            list.add(rs.getString("class_num"));
+        }
+    }
+
+    return list;
+}
+
 }
