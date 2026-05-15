@@ -1,144 +1,138 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
-	pageEncoding="UTF-8"%>
+    pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="jakarta.tags.core"%>
-<c:import url="/common/base.jsp">
-	<c:param name="title">
-		得点管理システム
-	</c:param>
 
-	<c:param name="content">
-		<div id="wrap_box">            <!-- 見出し -->
+<c:import url="/common/base.jsp">
+    <c:param name="title">得点管理システム</c:param>
+
+    <c:param name="content">
+
+        <div id="wrap_box">
+
             <h2 class="h3 mb-3 fw-normal bg-secondary bg-opacity-10 py-2">
                 成績管理
             </h2>
 
-            <!-- 白枠 -->
             <div class="border rounded p-4 bg-white">
 
-                <form action="" method="post">
-
+                <!-- 検索フォーム -->
+                <form action="TestRegist.action" method="post">
                     <div class="d-flex align-items-end gap-4">
 
-                        <!-- 入学年度 -->
                         <div>
-
-                            <label class="form-label">
-                                入学年度
-                            </label>
-
-                            <select name="entYear"
-                                    class="form-select">
-
-                                <option value="">
-                                    --------
-                                </option>
-
-                                <c:forEach var="year"
-                                           items="${entYearSet}">
-
-                                    <option value="${year}">
-                                        ${year}
-                                    </option>
-
+                            <label>入学年度</label>
+                            <select name="entYear" class="form-select">
+                                <option value="">--------</option>
+                                <c:forEach var="year" items="${entYearSet}">
+                                    <option value="${year}">${year}</option>
                                 </c:forEach>
-
                             </select>
-
                         </div>
 
-                        <!-- クラス -->
                         <div>
-
-                            <label class="form-label">
-                                クラス
-                            </label>
-
-                            <select name="classNum"
-                                    class="form-select">
-
-                                <option value="">
-                                    --------
-                                </option>
-
-                                <c:forEach var="c"
-                                           items="${classNumSet}">
-
-                                    <option value="${c}">
-                                        ${c}
-                                    </option>
-
+                            <label>クラス</label>
+                            <select name="classNum" class="form-select">
+                                <option value="">--------</option>
+                                <c:forEach var="c" items="${classNumSet}">
+                                    <option value="${c}">${c}</option>
                                 </c:forEach>
-
                             </select>
-
                         </div>
 
-                        <!-- 科目 -->
                         <div>
-
-                            <label class="form-label">
-                                科目
-                            </label>
-
-                            <select name="subject"
-                                    class="form-select">
-
-                                <option value="">
-                                    --------
-                                </option>
-
-                                <c:forEach var="sub"
-                                           items="${subjectList}">
-
-                                    <option value="${sub.cd}">
-                                        ${sub.name}
-                                    </option>
-
+                            <label>科目</label>
+                            <select name="subject" class="form-select">
+                                <option value="">--------</option>
+                                <c:forEach var="sub" items="${subjectList}">
+                                    <option value="${sub.cd}">${sub.name}</option>
                                 </c:forEach>
-
                             </select>
-
                         </div>
 
-                        <!-- 回数 -->
                         <div>
-
-                            <label class="form-label">
-                                回数
-                            </label>
-
-                            <select name="count"
-                                    class="form-select">
-
-                                <option value="">
-                                    --------
-                                </option>
-
-                                <option value="1">
-                                    1
-                                </option>
-
-                                <option value="2">
-                                    2
-                                </option>
-
+                            <label>回数</label>
+                            <select name="count" class="form-select">
+                                <option value="">--------</option>
+                                <c:forEach var="n" items="${countList}">
+                                    <option value="${n}">${n}</option>
+                                </c:forEach>
                             </select>
-
                         </div>
 
-                        <!-- 検索ボタン -->
+                        <input type="hidden" name="schoolCd" value="oom">
+
                         <div>
-
-                            <button type="submit"
-                                    class="btn btn-secondary">
-
+                            <button type="submit" class="btn btn-secondary">
                                 検索
-
                             </button>
                         </div>
+
                     </div>
                 </form>
+
+                <!-- 検索結果 -->
+                <c:if test="${not empty testList}">
+
+                    <div class="mt-4">
+                        <p>科目：${subjectName}（${count}回）</p>
+                    </div>
+
+                    <!-- 登録フォーム -->
+                    <form action="TestUpdate.action" method="post">
+
+                        <table class="table table-bordered">
+                            <thead class="table-light">
+                                <tr>
+                                    <th>入学年度</th>
+                                    <th>クラス</th>
+                                    <th>学生番号</th>
+                                    <th>氏名</th>
+                                    <th>点数</th>
+                                </tr>
+                            </thead>
+
+                            <tbody>
+                                <c:forEach var="test" items="${testList}">
+                                    <tr>
+                                        <td>${test.entYear}</td>
+                                        <td>${test.classNum}</td>
+                                        <td>${test.student.no}</td>
+                                        <td>${test.student.name}</td>
+
+                                        <td>
+                                            <input type="text"
+                                                   name="point_${test.student.no}"
+                                                   value="${test.point}"
+                                                   class="form-control"
+                                                   style="width:100px;">
+                                        </td>
+
+                                        <!-- ✅ 重要 -->
+                                        <td hidden>
+                                            <input type="hidden"
+                                                   name="studentNoList"
+                                                   value="${test.student.no}">
+                                        </td>
+                                    </tr>
+                                </c:forEach>
+                            </tbody>
+                        </table>
+
+                        <!-- hidden -->
+                        <input type="hidden" name="subject" value="${subject}">
+                        <input type="hidden" name="count" value="${count}">
+                        <input type="hidden" name="schoolCd" value="oom">
+
+                        <button type="submit" class="btn btn-primary">
+                            登録して終了
+                        </button>
+
+                    </form>
+
+                </c:if>
+
             </div>
         </div>
+
     </c:param>
 </c:import>
