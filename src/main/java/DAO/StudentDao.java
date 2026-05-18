@@ -19,6 +19,7 @@ import java.util.List;
 // 複数データを順序付きで保持するためのインタフェース
 import java.util.Set;
 // 重複しないデータ集合を扱うためのインタフェース
+import java.util.TreeSet;
 
 import bean.School;
 // 学校情報を保持するJavaBean
@@ -394,4 +395,79 @@ public class StudentDao extends Dao {
 
         return set;
     }
+    public List<Student> filter(String entYear, String classNum, String schoolCd) throws Exception {
+
+        List<Student> list = new ArrayList<>();
+
+        String sql =
+            "SELECT no, name, ent_year, class_num " +
+            "FROM student " +
+            "WHERE school_cd = ? " +
+            "  AND ent_year = ? " +
+            "  AND class_num = ? " +
+            "ORDER BY no";
+
+        try (
+            Connection con = getConnection();
+            PreparedStatement ps = con.prepareStatement(sql)
+        ) {
+            ps.setString(1, schoolCd);
+            ps.setString(2, entYear);
+            ps.setString(3, classNum);
+
+            ResultSet rs = ps.executeQuery();
+
+            while (rs.next()) {
+                Student stu = new Student();
+                stu.setNo(rs.getString("no"));
+                stu.setName(rs.getString("name"));
+                stu.setEntYear(rs.getInt("ent_year"));
+                stu.setClassNum(rs.getString("class_num"));
+
+                list.add(stu);
+            }
+        }
+
+        return list;
+    }
+    
+    public Set<String> getEntYearSet(String schoolCd) throws Exception {
+        Set<String> set = new TreeSet<>();
+
+        String sql = "SELECT DISTINCT ent_year FROM student WHERE school_cd = ? ORDER BY ent_year";
+
+        try (
+            Connection con = getConnection();
+            PreparedStatement ps = con.prepareStatement(sql)
+        ) {
+            ps.setString(1, schoolCd);
+            ResultSet rs = ps.executeQuery();
+
+            while (rs.next()) {
+                set.add(rs.getString("ent_year"));
+            }
+        }
+        return set;
+    }
+
+    public Set<String> getClassNumSet(String schoolCd) throws Exception {
+        Set<String> set = new TreeSet<>();
+
+        String sql = "SELECT DISTINCT class_num FROM student WHERE school_cd = ? ORDER BY class_num";
+
+        try (
+            Connection con = getConnection();
+            PreparedStatement ps = con.prepareStatement(sql)
+        ) {
+            ps.setString(1, schoolCd);
+            ResultSet rs = ps.executeQuery();
+
+            while (rs.next()) {
+                set.add(rs.getString("class_num"));
+            }
+        }
+        return set;
+    }
+
+
 }

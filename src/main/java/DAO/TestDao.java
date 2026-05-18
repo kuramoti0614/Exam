@@ -5,50 +5,87 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
+import java.util.TreeSet;
 
-import bean.School;
 import bean.Student;
-import bean.Subject;
 import bean.Test;
 
-public class TestDao {
+public class TestDao extends Dao {
 
-    public List<Test> findAll() throws Exception {
+	public List<Test> getTestList(
+	        List<Student> studentList,
+	        String subjectCd,
+	        String count,
+	        String schoolCd) throws Exception {
 
-        List<Test> list = new ArrayList<>();
+	    List<Test> list = new ArrayList<>();
 
-        String sql =
-            "SELECT student_no, subject_cd, school_cd, no, point, class_num " +
-            "FROM test ORDER BY student_no, subject_cd, no";
+	    String sql =
+	        "SELECT point, class_num " +
+	        "FROM test " +
+	        "WHERE student_no = ? " +
+	        "  AND subject_cd = ? " +
+	        "  AND no = ? " +
+	        "  AND school_cd = ?";
 
-        try (
-            Connection con = new Dao().getConnection();
-            PreparedStatement ps = con.prepareStatement(sql);
-            ResultSet rs = ps.executeQuery();
-        ) {
-            while (rs.next()) {
+	    try (
+	        Connection con = getConnection();
+	        PreparedStatement ps = con.prepareStatement(sql)
+	    ) {
+	        for (Student stu : studentList) {
 
-                Student student = new Student();
-                student.setNo(rs.getString("student_no"));
+	            Test test = new Test();
+	            test.setStudent(stu);                 // ← ここが重要
+	            stu.setEntYear(stu.getEntYear());    // JSP が必要
+	            test.setClassNum(stu.getClassNum());  // JSP が必要
 
-                Subject subject = new Subject();
-                subject.setCd(rs.getString("subject_cd"));
+	            // ▼ test テーブルを検索
+	            ps.setString(1, stu.getNo());
+	            ps.setString(2, subjectCd);
+	            ps.setString(3, count);
+	            ps.setString(4, schoolCd);
 
-                School school = new School();
-                school.setCd(rs.getString("school_cd"));
+	            ResultSet rs = ps.executeQuery();
 
-                Test test = new Test();
-                test.setStudent(student);
-                test.setSubject(subject);
-                test.setSchool(school);
-                test.setNo(rs.getInt("no"));
-                test.setPoint(rs.getInt("point"));
-                test.setClassNum(rs.getString("class_num"));
+	            if (rs.next()) {
+	                test.setPoint(rs.getInt("point"));
+	                test.setClassNum(rs.getString("class_num"));
+	            } else {
+	                test.setPoint(0); // 未登録なら 0 or 空欄
+	            }
 
-                list.add(test);
-            }
-        }
+	            list.add(test);
+	        }
+	    }
 
-        return list;
-    }
+	    return list;
+	}
+	
+	
+	
+	public Set<Integer> getCountSet(String schoolCd) throws Exception {
+	    Set<Integer> set = new TreeSet<>();
+
+	    String sql = "SELECT DISTINCT no FROM test WHERE school_cd = ? ORDER BY no";
+
+	    try (
+	        Connection con = getConnection();
+	        PreparedStatement ps = con.prepareStatement(sql)
+	    ) {
+	        ps.setString(1, schoolCd);
+	        ResultSet rs = ps.executeQuery();
+
+	        while (rs.next()) {
+	            set.add(rs.getInt("no"));
+	        }
+	    }
+	    return set;
+	}
+
+	
+	
+	
+	
 }
+

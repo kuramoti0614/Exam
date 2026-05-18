@@ -23,7 +23,6 @@
 
                 <!-- 科目コード -->
                 <div class="mb-3">
-
                     <label for="cd">科目コード</label><br>
 
                     <input type="text"
@@ -31,28 +30,31 @@
                            name="cd"
                            value="${subject.cd}"
                            readonly />
-
                 </div>
+
+                <!-- エラーメッセージ（重要：1つに統一） -->
+                <c:if test="${not empty errorMessage}">
+                    <div class="text-warning mb-3">
+                        ${errorMessage}
+                    </div>
+                </c:if>
 
                 <!-- 科目名 -->
                 <div class="mb-3">
-
                     <label for="name">科目名</label><br>
 
                     <input type="text"
                            id="name"
                            name="name"
-                           value="${subject.name}" />
-
+                           value="${subject.name}"
+                           required />
                 </div>
 
                 <!-- 更新ボタン -->
                 <div>
-
                     <input class="btn btn-primary"
                            type="submit"
                            value="変更" />
-
                 </div>
 
             </form>
